@@ -27,3 +27,5 @@ AI 6기 장고 심화주차 개인과제
 
 
 <프로젝트 ERD>
+초기 ERD입니다. 추가기능을 만약 넣게 되면 변경될 수 있습니다.
+![spartamarket_DRF ERD](https://github.com/hideoutoasis/spartamarket_DRF_by_HSH/assets/122522460/caa55031-2cdb-4d49-bb5c-0f0e99e8a803)
