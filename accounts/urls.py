@@ -1,6 +1,7 @@
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from . import views
+from rest_framework import urls
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
@@ -8,6 +9,7 @@ from rest_framework_simplejwt.views import (
 
 urlpatterns = [
     path("", views.UserCreate.as_view(), name="sign_in"),
+    path('api-auth/', include('rest_framework.urls')),
     path("login/", TokenObtainPairView.as_view(), name="log_in"),
     path("<str:username>/", views.ProfileDetailAPIView.as_view(), name="profile_detail"),
     path("token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),

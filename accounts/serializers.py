@@ -11,6 +11,7 @@ class UserSerializer(serializers.ModelSerializer):
             birthday = validated_data['birthday'],
             password = validated_data['password']
         )
+        return user
     
     class Meta:
         model = User

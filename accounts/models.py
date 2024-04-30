@@ -13,7 +13,7 @@ class CustomUserManager(BaseUserManager):
             raise ValueError('must have user nickname')
         if not birthday:
             raise ValueError('must have user birthday')
-    # 필수 입력값 미입력 시 의도적으로 에러를 일으킴.
+    # 필수 입력값 미입력 시 의도적으로 에러를 발생시킴
         
         user = self.model(
             username = username,
@@ -45,6 +45,7 @@ class CustomUserManager(BaseUserManager):
 
 class User(AbstractUser):
     email = models.EmailField(default='', max_length=100, null=False, blank=False, unique=True)
+    name = models.CharField(default='', max_length=100, null=False, blank=False)
     nickname = models.CharField(default='', max_length=100, null=False, blank=False, unique=True)
     birthday =models.DateField()
     
@@ -56,5 +57,5 @@ class User(AbstractUser):
     objects = CustomUserManager()
     
     # 회원가입을 위해 필수 작성해야 하는 요소들, username과 password는 AbstractUser에서 기본적으로 받기 때문에 넣으면 마이그레이션할 때 에러가 난다.
-    REQUIRED_FIELDS = ["email", "nickname", "birthday"]
+    REQUIRED_FIELDS = ["email", "name", "nickname", "birthday"]
     # first name과 last name도 기본적으로 받기 때문에 안넣어줘도 될 듯.
