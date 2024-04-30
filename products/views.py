@@ -24,26 +24,26 @@ class ProductAPIView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
-class ArticleDetailAPIView(APIView):
+class ProductDetailAPIView(APIView):
     
     # permission_classes = [ IsAuthenticated ] 일단 계정 기능 만들기 전까지는 주석처리
     
-    def get_object(self, pk):
-        return get_object_or_404(Product, pk=pk)
+    def get_object(self, productId):
+        return get_object_or_404(Product, pk=productId)
     
-    def get(self, request, pk): # 상세페이지 조회
-        product = self.get_object(pk) 
+    def get(self, request, productId): # 상세페이지 조회
+        product = self.get_object(productId) 
         serializer = ProductSerializer(product)
         return Response(serializer.data)
     
-    def put(self, request, pk): # 상품 수정
-        product = self.get_object(pk)
+    def put(self, request, productId): # 상품 수정
+        product = self.get_object(productId)
         serializer = ProductSerializer(product, data=request.data, partial=True)
         if serializer.is_valid(raise_exception=True):
             serializer.save()
             return Response(serializer.data)
         
-    def delete(self, request, pk): # 상품 삭제
-        product = self.get_object(pk)
+    def delete(self, request, productId): # 상품 삭제
+        product = self.get_object(productId)
         product.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
