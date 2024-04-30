@@ -17,6 +17,8 @@ class ProductAPIView(APIView):
         serializer = ProductSerializer(products, many=True)
         return Response(serializer.data)
     
+    # permission_classes = [ IsAuthenticated ]
+    
     def post(self, request): # 상품 등록
         serializer = ProductSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
