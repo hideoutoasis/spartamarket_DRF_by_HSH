@@ -3,8 +3,14 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from .serializers import UserSerializer
+from rest_framework import generics
 
 from .models import User
+
+# 회원가입
+class UserCreate(generics.CreateAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
 
 
 class ProfileDetailAPIView(APIView):
