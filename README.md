@@ -68,7 +68,20 @@ AI 6기 장고 심화주차 개인과제
 ![상품삭제 확인](https://github.com/hideoutoasis/spartamarket_DRF_by_HSH/assets/122522460/66ede019-8d1b-422f-be2f-43176ab19dbb)
 상품 삭제기능입니다.<br/>
 등록한 상품을 삭제할 수 있으며, 로그인 하여 토큰을 발급받은 상태에서 접근할 수 있고 수정과 마찬가지로 작성자와 요청자의 동일성을 검증합니다.
-로직은 수정과 같습니다.<br/><br/>![상품 삭제 시 작성자 검증](https://github.com/hideoutoasis/spartamarket_DRF_by_HSH/assets/122522460/0e37413a-57e2-4a7d-a359-284b132a18c7)
+로직은 수정과 같습니다.<br/><br/>
+![상품 삭제 시 작성자 검증](https://github.com/hideoutoasis/spartamarket_DRF_by_HSH/assets/122522460/0e37413a-57e2-4a7d-a359-284b132a18c7)<br/><br/><br/>
+
+<선택기능 구현>
+페이지네이션 및 필터링, 정렬 기능을 구현했습니다.<br/>
+상품 목록조회 시 페이지를 구분하여 나눠지도록 페이지네이션 구현했고, 제목과 내용으로 글을 찾기, 제목과 작성일자로 글 정렬하기 기능이 추가되었습니다.<br/>
+![페이지네이션 필터링 기능](https://github.com/hideoutoasis/spartamarket_DRF_by_HSH/assets/122522460/68a9b181-610b-4357-9003-8592297d3434)<br/>
+키워드에 맞는 글이 없으면 null이 뜨고<br/>
+![페이지네이션 필터링 기능 제목으로 찾기](https://github.com/hideoutoasis/spartamarket_DRF_by_HSH/assets/122522460/49f4e312-f9f9-4d17-a1ad-0eca71501274)<br/>
+![페이지네이션 필터링 기능 내용으로 찾기](https://github.com/hideoutoasis/spartamarket_DRF_by_HSH/assets/122522460/8875cd59-103c-4777-afae-445a5825169b)<br/>
+키워드에 맞는 글이 있다면 찾아낼 수 있습니다.<br/><br/>
+![페이지네이션 필터링 정렬하기](https://github.com/hideoutoasis/spartamarket_DRF_by_HSH/assets/122522460/ff02b2be-bdf0-4787-a221-c8fbf4ceb6d6)<br/>
+작성일자나 제목 순으로 정렬할 수도 있습니다.
+
 
 
 
