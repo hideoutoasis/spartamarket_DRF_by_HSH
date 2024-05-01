@@ -5,19 +5,23 @@ from django.shortcuts import get_object_or_404
 # from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework import status
 from .serializers import ProductSerializer
 
 from .models import Product
 
 class ProductAPIView(APIView):
+    # 이 클래스 안에서 부분적으로 접근제한을 할 수 있게 위로 함수를 뻬고 아래에서 오버라이딩
+    def get_permissions(self):
+        if self.request.method == 'POST':
+            return [ IsAuthenticated() ]
+        return []
+    
     def get(self, request): # 상품 목록조회
         products = Product.objects.all()
         serializer = ProductSerializer(products, many=True)
         return Response(serializer.data)
-    
-    # permission_classes = [ IsAuthenticated ]
     
     def post(self, request): # 상품 등록
         serializer = ProductSerializer(data=request.data)
@@ -28,7 +32,7 @@ class ProductAPIView(APIView):
 
 class ProductDetailAPIView(APIView):
     
-    # permission_classes = [ IsAuthenticated ] 일단 계정 기능 만들기 전까지는 주석처리
+    permission_classes = [ IsAuthenticated ]
     
     def get_object(self, productId):
         return get_object_or_404(Product, pk=productId)
