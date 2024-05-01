@@ -5,8 +5,7 @@ from django.shortcuts import get_object_or_404
 # from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.permissions import IsAuthenticated, AllowAny, IsAuthenticatedOrReadOnly
-from .permissions import IsOwnerOrReadOnly
+from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 from .serializers import ProductSerializer
 
@@ -20,7 +19,7 @@ class ProductAPIView(APIView):
         return []
     
     def get(self, request): # 상품 목록조회
-        products = Product.objects.all()
+        products = Product.objects.all().order_by("-pk")
         serializer = ProductSerializer(products, many=True)
         return Response(serializer.data)
     
@@ -33,24 +32,46 @@ class ProductAPIView(APIView):
 
 class ProductDetailAPIView(APIView):
     
-    permission_classes = [ IsOwnerOrReadOnly ]
+    permission_classes = [IsAuthenticated]
     
     def get_object(self, productId):
         return get_object_or_404(Product, pk=productId)
     
     def get(self, request, productId): # 상세페이지 조회
-        product = self.get_object(productId) 
+        product = self.get_object(productId)
         serializer = ProductSerializer(product)
         return Response(serializer.data)
     
     def put(self, request, productId): # 상품 수정
         product = self.get_object(productId)
-        serializer = ProductSerializer(product, data=request.data, partial=True)
-        if serializer.is_valid(raise_exception=True):
-            serializer.save()
-            return Response(serializer.data)
+        if product.author == request.user:  # 작성자인지 확인
+            serializer = ProductSerializer(product, data=request.data, partial=True)
+            if serializer.is_valid(raise_exception=True):
+                serializer.save()
+                return Response(serializer.data)
+            else:
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response({"error": "You are not the author of this product."}, status=status.HTTP_403_FORBIDDEN)
         
     def delete(self, request, productId): # 상품 삭제
         product = self.get_object(productId)
-        product.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        if product.author == request.user:# 작성자인지 확인
+            product.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        else:
+            return Response({"error": "You are not the author of this product."}, status=status.HTTP_403_FORBIDDEN)
+    
+    # def put(self, request, productId): # 상품 수정
+    #     product = self.get_object(productId)
+    #     if product.author == request.user:
+    #         serializer = ProductSerializer(product, data=request.data, partial=True)
+    #         if serializer.is_valid(raise_exception=True):
+    #             serializer.save()
+    #             return Response(serializer.data)
+        
+    # def delete(self, request, productId): # 상품 삭제
+    #     product = self.get_object(productId)
+    #     if product.author == request.user:
+    #         product.delete()
+    #         return Response(status=status.HTTP_204_NO_CONTENT)
