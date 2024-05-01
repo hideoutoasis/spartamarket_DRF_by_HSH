@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     # Third party
     'django_seed',
     'rest_framework',
+    'rest_framework_simplejwt.token_blacklist',
     
     # Local
     'products',
@@ -99,6 +100,9 @@ REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ],
+    
+    'DEFAULT_PAGINATION_CLASS' : 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE' : 10,
 }
 
 SIMPLE_JWT = {

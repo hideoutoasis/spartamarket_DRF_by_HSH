@@ -5,6 +5,7 @@ from rest_framework import urls
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
+    TokenBlacklistView,
 )
 
 urlpatterns = [
@@ -12,5 +13,6 @@ urlpatterns = [
     path('api_auth/', include('rest_framework.urls')), # JWT가 제공하는 로그인 기능
     path("login/", views.LoginAPIView.as_view(), name="log_in"), # 내가 만든 로그인 기능
     path("<str:username>/", views.ProfileDetailAPIView.as_view(), name="profile_detail"),
+    path('logout/', TokenBlacklistView.as_view(), name='token_blacklist'), # 로그아웃 기능 개발중...
     path("token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
 ]

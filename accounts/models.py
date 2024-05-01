@@ -41,13 +41,13 @@ class CustomUserManager(BaseUserManager):
         user.save()
         
         return user
-    
+
 
 class User(AbstractUser):
     email = models.EmailField(default='', max_length=100, null=False, blank=False, unique=True)
     name = models.CharField(default='', max_length=100, null=False, blank=False)
     nickname = models.CharField(default='', max_length=100, null=False, blank=False, unique=True)
-    birthday =models.DateField()
+    birthday = models.DateField()
     
     # 사용자 관리 및 인증 문제를 해결하기 위한 코드
     is_active = models.BooleanField(default=True)    
