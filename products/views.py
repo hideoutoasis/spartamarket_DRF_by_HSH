@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.pagination import PageNumberPagination # 페이지네이션
+from rest_framework.filters import SearchFilter # 필터링 기능
 from rest_framework import status
 from .serializers import ProductSerializer
 
@@ -13,6 +14,10 @@ class CustomPagination(PageNumberPagination):
     page_size = 10
 
 class ProductAPIView(APIView):
+    filter_backends = [SearchFilter]
+    search_fields = ['title', 'username', 'content']
+    ordering_fields = ['title', 'created_at']
+    
     # 이 클래스 안에서 부분적으로 접근제한을 할 수 있게 위로 함수를 뻬고 아래에서 오버라이딩
     def get_permissions(self):
         if self.request.method == 'POST':
@@ -20,11 +25,24 @@ class ProductAPIView(APIView):
         return []
     
     def get(self, request): # 상품 목록조회 / 페이지네이션
+        
+        search_query = request.query_params.get('search', None)
+        
         products = Product.objects.all().order_by("-pk")
+        if search_query:
+            products = products.filter(name__icontains=search_query)
+            
         paginator = CustomPagination()
         result_page = paginator.paginate_queryset(products, request)
         serializer = ProductSerializer(result_page, many=True)
         return paginator.get_paginated_response(serializer.data)
+
+    # def get(self, request): # 상품 목록조회 / 페이지네이션
+    #     products = Product.objects.all().order_by("-pk")
+    #     paginator = CustomPagination()
+    #     result_page = paginator.paginate_queryset(products, request)
+    #     serializer = ProductSerializer(result_page, many=True)
+    #     return paginator.get_paginated_response(serializer.data)
     
     def post(self, request): # 상품 등록
         serializer = ProductSerializer(data=request.data, partial=True)
