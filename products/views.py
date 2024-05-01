@@ -15,7 +15,7 @@ class CustomPagination(PageNumberPagination):
 
 class ProductAPIView(APIView):
     filter_backends = [SearchFilter]
-    search_fields = ['title', 'username', 'content']
+    search_fields = ['title', 'content']
     ordering_fields = ['title', 'created_at']
     
     # 이 클래스 안에서 부분적으로 접근제한을 할 수 있게 위로 함수를 뻬고 아래에서 오버라이딩
@@ -25,24 +25,24 @@ class ProductAPIView(APIView):
         return []
     
     def get(self, request): # 상품 목록조회 / 페이지네이션
-        
-        search_query = request.query_params.get('search', None)
-        
         products = Product.objects.all().order_by("-pk")
-        if search_query:
-            products = products.filter(name__icontains=search_query)
+        
+        title = request.query_params.get('title', None)
+        content = request.query_params.get('content', None)
+        
+        if title:
+            products = products.filter(title__icontains=title)
+        if content:
+            products = products.filter(content__icontains=content)
             
+        ordering = self.request.query_params.get('ordering', None)
+        if ordering in self.ordering_fields:
+            products = products.order_by(ordering)
+        
         paginator = CustomPagination()
         result_page = paginator.paginate_queryset(products, request)
         serializer = ProductSerializer(result_page, many=True)
         return paginator.get_paginated_response(serializer.data)
-
-    # def get(self, request): # 상품 목록조회 / 페이지네이션
-    #     products = Product.objects.all().order_by("-pk")
-    #     paginator = CustomPagination()
-    #     result_page = paginator.paginate_queryset(products, request)
-    #     serializer = ProductSerializer(result_page, many=True)
-    #     return paginator.get_paginated_response(serializer.data)
     
     def post(self, request): # 상품 등록
         serializer = ProductSerializer(data=request.data, partial=True)
